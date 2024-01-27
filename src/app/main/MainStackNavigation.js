@@ -33,7 +33,7 @@ const MainStackNavigation = () => {
     return (
         <MainStacks.Navigator screenOptions={{ headerShown: false }}>
             <MainStacks.Screen name="MainTabs" component={MainTabsNavigation} />
-            <MainStacks.Screen name="Detail" component={Detail} />
+            <MainStacks.Screen name="CoffeeDetails" component={Detail} />
             <MainStacks.Screen name="Payment" component={Payment} />
             <MainStacks.Screen name="Personal" component={Personal} />
             <MainStacks.Screen name="Settings" component={Settings} />

@@ -7,7 +7,7 @@ import { AppContext } from './AppContext';
 
 const AppNavigation = () => {
     const { isLogin } = useContext(AppContext);
-    console.log('isLogin', isLogin)
+    console.log('isLogin', isLogin);
     return (
         <NavigationContainer>
             {
