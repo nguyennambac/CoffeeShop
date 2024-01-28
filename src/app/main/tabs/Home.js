@@ -1,27 +1,71 @@
 import { StyleSheet, Text, View, FlatList, Image, TouchableOpacity, TextInput, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import AxiosInstance from '../../helpers/AxiosInstance'
 
-const Home = () => {
-    const [data, setData] = useState(DATA);
-    const [datacate, setDatacate] = useState(DATACATE);
+const Home = (props) => {
+    const [datacate, setDatacate] = useState([]);
     const navigation = useNavigation();
 
+    // lấy danh sách danh mục, chạy 1 lần duy nhất
+    useEffect(() => {
+        const getCategories = async () => {
+            try {
+                const response = await AxiosInstance().get('/categories');
+                // console.log('Get categories successfully: ', response);
+                setDatacate(response.categories);
+                // chọn danh mục đầu tiên làm mặc định
+                setSelectedCategory(response.categories[0]._id);
+            } catch (error) {
+                console.log('Get categories error: ', error.message || error);
+            }
+        }
+        getCategories();
+    }, []);
+
+    const renderCate = ({ item }) => {
+        return (
+            <View key={item._id}>
+                <Text onPress={() => setSelectedCategory(item._id)}
+                    style={{ color: '#52555A', fontSize: 14, fontWeight: 600, marginRight: 19, marginBottom: 36 }}>
+                    {item.name}</Text>
+            </View>
+        )
+    }
+
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [data, setData] = useState([]);
+
+    // lấy danh sách sản phẩm theo danh mục dc chọn
+    useEffect(() => {
+        const getProducts = async () => {
+            // nếu chưa chọn danh mục thì ko làm gì cả
+            if (!selectedCategory) return;
+            try {
+                const response = await AxiosInstance().get(`/products?category=${selectedCategory}`);
+                console.log('Get products successfully: ', response);
+                setData(response.products);
+            } catch (error) {
+                console.log('Get products error: ', error.message || error);
+            }
+        }
+        getProducts();
+    }, [selectedCategory]);
+
     const renderItem = ({ item }) => {
-        const { id, rate, name_product, content_product, price, image_product } = item;
         const handleCoffeeDetails = () => {
-            navigation.navigate('CoffeeDetails', { item });
+            navigation.navigate('CoffeeDetails', { _id: item._id });
         }
 
         return (
-            <TouchableOpacity onPress={handleCoffeeDetails}>
-                <View >
+            <TouchableOpacity key={item._id} onPress={handleCoffeeDetails}>
+                <View key={item._id}>
                     <View style={styles.containerItem}>
                         <View style={{ position: 'relative' }}>
                             <View>
                                 <Image
                                     style={{ borderRadius: 20, marginBottom: 10, width: 126, height: 126 }}
-                                    source={image_product} />
+                                    source={{ uri: `${item.image}` }} />
                             </View>
 
                             <Image
@@ -31,10 +75,10 @@ const Home = () => {
                                 style={{ position: 'absolute', right: 31, top: 5 }}
                                 source={require('../../../../assets/images/star.png')} />
                             <Text style={{ position: 'absolute', top: 2, right: 5, color: 'white', fontWeight: 'bold', fontSize: 11, right: 11 }}>
-                                {rate}
+                                {item.rating}
                             </Text>
                         </View>
-                        <Text style={{
+                        <Text numberOfLines={1} style={{
                             display: 'flex',
                             width: 92,
                             height: 23,
@@ -44,8 +88,8 @@ const Home = () => {
                             color: 'white',
                             fontSize: 13,
                             fontWeight: 400,
-                        }}>{name_product}</Text>
-                        <Text style={{
+                        }}>{item.name}</Text>
+                        <Text numberOfLines={2} style={{
                             display: 'flex',
                             width: 92,
                             height: 23,
@@ -55,7 +99,7 @@ const Home = () => {
                             color: 'white',
                             fontSize: 9,
                             fontWeight: 400,
-                        }}>{content_product}</Text>
+                        }}>{item.description}</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <Text style={{
                                 marginTop: 6,
@@ -65,7 +109,7 @@ const Home = () => {
                             }}>
                                 <Text style={{
                                     color: '#D17842',
-                                }}>$</Text> {price}
+                                }}>$</Text> {item.price}
                             </Text>
                             <TouchableOpacity style={{ width: 29, height: 29, borderRadius: 10, backgroundColor: '#D17842' }}>
                                 <Text style={{ color: 'white', textAlign: 'center', padding: 4, fontWeight: 'bold', fontSize: 15 }}>+</Text>
@@ -77,13 +121,6 @@ const Home = () => {
         )
     }
 
-    const renderCate = ({ item }) => {
-        return (
-            <View>
-                <Text style={{ color: '#52555A', fontSize: 14, fontWeight: 600, marginRight: 19, marginBottom: 36 }}>{item}</Text>
-            </View>
-        )
-    }
 
     return (
         <View style={styles.container}>
@@ -93,7 +130,7 @@ const Home = () => {
                 marginTop: 30
             }}>
                 <View>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => { navigation.navigate('Settings') }}>
                         <View>
                             <Image
                                 style={{ position: 'relative' }}
@@ -105,9 +142,11 @@ const Home = () => {
                     </TouchableOpacity>
                 </View>
                 <View>
-                    <Image
-                        style={{ width: 30, height: 30, borderRadius: 10 }}
-                        source={require('../../../../assets/images/person.png')} />
+                    <TouchableOpacity onPress={() => { navigation.navigate('PersonalDetails') }}>
+                        <Image
+                            style={{ width: 30, height: 30, borderRadius: 10 }}
+                            source={require('../../../../assets/images/person.png')} />
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -142,7 +181,7 @@ const Home = () => {
                             horizontal={true}
                             data={datacate}
                             renderItem={renderCate}
-                            keyExtractor={cate => cate}
+                            keyExtractor={cate => cate._id}
                         />
                     </View>
                 </View>
@@ -153,7 +192,7 @@ const Home = () => {
                         horizontal={true}
                         data={data}
                         renderItem={renderItem}
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => item._id}
                     />
                 </View>
 

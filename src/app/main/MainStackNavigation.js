@@ -17,6 +17,7 @@ import Detail from './stacks/Detail';
 import Payment from './stacks/Payment';
 import Personal from './stacks/Personal';
 import Settings from './stacks/Settings';
+import Login from '../authen/Login';
 
 const MainTabsNavigation = () => {
     return (
@@ -35,7 +36,8 @@ const MainStackNavigation = () => {
             <MainStacks.Screen name="MainTabs" component={MainTabsNavigation} />
             <MainStacks.Screen name="CoffeeDetails" component={Detail} />
             <MainStacks.Screen name="Payment" component={Payment} />
-            <MainStacks.Screen name="Personal" component={Personal} />
+            <MainStacks.Screen name="Login" component={Login} />
+            <MainStacks.Screen name="PersonalDetails" component={Personal} />
             <MainStacks.Screen name="Settings" component={Settings} />
         </MainStacks.Navigator>
     )
