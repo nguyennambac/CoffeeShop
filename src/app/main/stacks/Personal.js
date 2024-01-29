@@ -1,9 +1,35 @@
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, ToastAndroid } from 'react-native'
+import React, { useState, useContext } from 'react'
 import { useNavigation } from '@react-navigation/native';
+import { AppContext } from '../../AppContext';
+import AxiosInstance from '../../helpers/AxiosInstance';
 
 const PersonalDetails = () => {
   const navigation = useNavigation();
+
+  const { nameInfo, setNameInfo } = useContext(AppContext);
+  const { emailInfo, setEmailInfo } = useContext(AppContext);
+  const { passwordInfo, setPasswordInfo } = useContext(AppContext);
+
+  const onPressUpdate = async () => {
+    console.log('onPressUpdate');
+    const infoUpdate = {
+      email: emailInfo,
+      password: passwordInfo,
+      name: nameInfo
+    }
+
+    try {
+      const result = await AxiosInstance().post('/users/update-profile', infoUpdate);
+      console.log(result);
+      if (result.status == true) {
+        ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+      }
+    } catch (error) {
+      console.error('Update failed:', error);
+      ToastAndroid.show('Failed to update profile', ToastAndroid.SHORT);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -25,23 +51,27 @@ const PersonalDetails = () => {
           color='white'
           placeholder='Name'
           placeholderTextColor='#828282'
-          value='Nguyễn Nam Bắc' />
+          value={nameInfo}
+          onChangeText={text => setNameInfo(text)} />
       </View>
       <View style={styles.input}>
         <TextInput
           color='white'
           placeholder='Email'
-          value='bacnnps35380@fpt.edu.vn'
+          value={emailInfo}
           keyboardType='email-address'
-          placeholderTextColor='#828282' />
+          placeholderTextColor='#828282'
+          onChangeText={text => setEmailInfo(text)} />
       </View>
 
       <View style={styles.input}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <TextInput
             color='white'
+            value={passwordInfo}
             placeholder='Password'
             secureTextEntry={true}
+            onChangeText={text => setPasswordInfo(text)}
             placeholderTextColor='#828282' />
           <Image
             style={{ marginTop: 5 }}
@@ -52,6 +82,7 @@ const PersonalDetails = () => {
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <TextInput
             color='white'
+            value={passwordInfo}
             placeholder='Re-type password'
             secureTextEntry={true}
             placeholderTextColor='#828282' />
@@ -61,7 +92,7 @@ const PersonalDetails = () => {
         </View>
       </View>
       <View style={styles.btnSave}>
-        <TouchableOpacity
+        <TouchableOpacity onPress={onPressUpdate}
           style={{ width: '100%' }}
         >
           <Text style={styles.touchLabel}>Save</Text>

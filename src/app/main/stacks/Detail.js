@@ -30,7 +30,7 @@ const CoffeeDetails = (props) => {
       product_name: product.name,
       product_image: product.image,
       product_quantity: 1,
-      product_price: 123
+      product_price: product.price
     }
     // tìm index của sản phẩm trong giỏ hàng
     const findIndex = cart.findIndex(item => item.product_id.toString() == itemCart.product_id.toString());
@@ -43,6 +43,7 @@ const CoffeeDetails = (props) => {
       newCart[findIndex].product_quantity += 1;
       setCart(newCart);
     }
+    console.log(cart);
   }
 
   return (

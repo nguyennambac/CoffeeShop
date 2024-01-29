@@ -6,6 +6,10 @@ import AxiosInstance from '../helpers/AxiosInstance'
 const Login = (props) => {
   const { navigation } = props;
   const { isLogin, setIsLogin } = useContext(AppContext);
+  const { nameInfo, setNameInfo } = useContext(AppContext);
+  const { emailInfo, setEmailInfo } = useContext(AppContext);
+  const { passwordInfo, setPasswordInfo } = useContext(AppContext);
+
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -28,29 +32,16 @@ const Login = (props) => {
       email: email,
       password: password
     }
-    const result = await AxiosInstance()
-      .post('/users/login', body);
+    const result = await AxiosInstance().post('/users/login', body);
     console.log(result);
     if (result.status == true) {
-      setIsLogin(true)
+      setIsLogin(true);
+      setNameInfo(result.user.name);
+      setEmailInfo(result.user.email);
+      setPasswordInfo(password);
     } else {
       Alert.alert('Thông báo', 'Đăng nhập không thành công');
     }
-  }
-
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const isValid = emailRegex.test(email);
-    setIsEmailValid(isValid);
-    setEmailErrorMsg(isValid ? '' : 'Invalid email address');
-    return isValid;
-  };
-
-  const validatePassword = (password) => {
-    const isPasswordValid = password.length >= 6;
-    setIsPasswordValid(isPasswordValid);
-    setPasswordErrorMsg(isPasswordValid ? '' : 'Password must be at least 6 characters long');
-    return isPasswordValid;
   }
 
   return (
