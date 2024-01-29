@@ -24,6 +24,7 @@ const PersonalDetails = () => {
       console.log(result);
       if (result.status == true) {
         ToastAndroid.show('Profile updated successfully', ToastAndroid.SHORT);
+        navigation.navigate('Home');
       }
     } catch (error) {
       console.error('Update failed:', error);

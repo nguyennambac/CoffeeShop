@@ -17,7 +17,7 @@ export const AppContextProvider = (props) => {
             cart, setCart,
             nameInfo, setNameInfo,
             emailInfo, setEmailInfo,
-            passwordInfo, setPasswordInfo
+            passwordInfo, setPasswordInfo,
         }}>
             {children}
         </AppContext.Provider>

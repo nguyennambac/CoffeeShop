@@ -75,7 +75,7 @@ const Home = (props) => {
                                 style={{ position: 'absolute', right: 31, top: 5 }}
                                 source={require('../../../../assets/images/star.png')} />
                             <Text style={{ position: 'absolute', top: 2, right: 5, color: 'white', fontWeight: 'bold', fontSize: 11, right: 11 }}>
-                                {item.rating}
+                                {item.rating.toFixed(1)}
                             </Text>
                         </View>
                         <Text numberOfLines={1} style={{
@@ -109,7 +109,7 @@ const Home = (props) => {
                             }}>
                                 <Text style={{
                                     color: '#D17842',
-                                }}>$</Text> {item.price}
+                                }}>$</Text> {item.price.toFixed(2)}
                             </Text>
                             <TouchableOpacity style={{ width: 29, height: 29, borderRadius: 10, backgroundColor: '#D17842' }}>
                                 <Text style={{ color: 'white', textAlign: 'center', padding: 4, fontWeight: 'bold', fontSize: 15 }}>+</Text>

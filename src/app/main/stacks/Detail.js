@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView, ToastAndroid } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../AppContext';
 import AxiosInstance from '../../helpers/AxiosInstance';
 
 const CoffeeDetails = (props) => {
   const { cart, setCart } = useContext(AppContext);
+
   const { _id } = props?.route?.params;
 
   const navigation = useNavigation();
@@ -32,16 +33,21 @@ const CoffeeDetails = (props) => {
       product_quantity: 1,
       product_price: product.price
     }
+
     // tìm index của sản phẩm trong giỏ hàng
     const findIndex = cart.findIndex(item => item.product_id.toString() == itemCart.product_id.toString());
     // nếu ko tìm thấy thì thêm mới
     if (findIndex === -1) {
       setCart([...cart, itemCart]);
+      ToastAndroid.show('Add products to cart successfully!', ToastAndroid.SHORT);
+      navigation.navigate('Home');
     } else {
       // nếu tìm thấy thì cập nhật số lượng
       const newCart = [...cart];
       newCart[findIndex].product_quantity += 1;
       setCart(newCart);
+      ToastAndroid.show('Add products to cart successfully!', ToastAndroid.SHORT);
+      navigation.navigate('Home');
     }
     console.log(cart);
   }
