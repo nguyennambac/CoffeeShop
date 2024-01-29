@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { Image, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
@@ -19,9 +19,50 @@ import Personal from './stacks/Personal';
 import Settings from './stacks/Settings';
 import Login from '../authen/Login';
 
+const renderTabLabel = ({ route, focused }) => {
+    if (!focused) {
+        return null;
+    }
+
+    return <Text style={{ color: '#D17842', fontSize: 12 }}>{route.name}</Text>;
+};
+
+const renderTabIcon = ({ route, focused }) => {
+    let iconSource;
+
+    if (route.name === 'Home') {
+        iconSource = focused
+            ? require('../../../../ExpoAppTest/assets/images/homefocus.png')
+            : require('../../../../ExpoAppTest/assets/images/home.png');
+    } else if (route.name === 'Cart') {
+        iconSource = focused
+            ? require('../../../../ExpoAppTest/assets/images/cartfocus.png')
+            : require('../../../../ExpoAppTest/assets/images/cart.png');
+    } else if (route.name === 'History') {
+        iconSource = focused
+            ? require('../../../../ExpoAppTest/assets/images/notificationfocus.png')
+            : require('../../../../ExpoAppTest/assets/images/notification.png');
+    } else if (route.name === 'Favorite') {
+        iconSource = focused
+            ? require('../../../../ExpoAppTest/assets/images/heartfocus.png')
+            : require('../../../../ExpoAppTest/assets/images/heart.png');
+    }
+
+    return <Image source={iconSource} />;
+};
+
 const MainTabsNavigation = () => {
     return (
-        <MainTabs.Navigator screenOptions={{ headerShown: false }}>
+        <MainTabs.Navigator
+            screenOptions={({ route }) => ({
+                headerShown: false,
+                tabBarLabel: ({ focused }) => renderTabLabel({ route, focused }),
+                tabBarIcon: ({ focused }) => renderTabIcon({ route, focused }),
+                tabBarStyle: { backgroundColor: '#0c0f14' },
+                tabBarItemStyle: { paddingVertical: 5 },
+                tabBarShowLabel: false, // Tắt hiển thị label
+            })}
+        >
             <MainTabs.Screen name="Home" component={Home} />
             <MainTabs.Screen name="Cart" component={Cart} />
             <MainTabs.Screen name="History" component={History} />
