@@ -1,4 +1,4 @@
-import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, ToastAndroid } from 'react-native'
+import { View, Text, Image, TouchableOpacity, TextInput, StyleSheet, ToastAndroid, KeyboardAvoidingView, ScrollView, Platform} from 'react-native'
 import React, { useState, useContext } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { AppContext } from '../../AppContext';
@@ -33,73 +33,79 @@ const PersonalDetails = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.title}>
-        <TouchableOpacity onPress={() => { navigation.goBack() }}>
+    <KeyboardAvoidingView
+      style={styles.containerKeyboard}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          <View style={styles.title}>
+            <TouchableOpacity onPress={() => { navigation.goBack() }}>
+              <Image
+                source={require("../../../../assets/images/icback.png")}
+                style={{ justifyContent: 'flex-start' }}
+              />
+            </TouchableOpacity>
+            <Text style={{ fontSize: 25, color: 'white', fontWeight: 'bold', flex: 1, textAlign: 'center', marginRight: 35 }}>Setting</Text>
+          </View>
           <Image
-            source={require("../../../../assets/images/icback.png")}
-            style={{ justifyContent: 'flex-start' }}
-          />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 25, color: 'white', fontWeight: 'bold', flex: 1, textAlign: 'center', marginRight: 35 }}>Setting</Text>
-      </View>
-      <Image
-        style={{ marginTop: 30, marginBottom: 60 }}
-        source={require('../../../../assets/images/person.png')} />
+            style={{ marginTop: 30, marginBottom: 60 }}
+            source={require('../../../../assets/images/person.png')} />
 
-      <View style={styles.input}>
-        <TextInput
-          color='white'
-          placeholder='Name'
-          placeholderTextColor='#828282'
-          value={nameInfo}
-          onChangeText={text => setNameInfo(text)} />
-      </View>
-      <View style={styles.input}>
-        <TextInput
-          color='white'
-          placeholder='Email'
-          value={emailInfo}
-          keyboardType='email-address'
-          placeholderTextColor='#828282'
-          onChangeText={text => setEmailInfo(text)} />
-      </View>
+          <View style={styles.input}>
+            <TextInput
+              color='white'
+              placeholder='Name'
+              placeholderTextColor='#828282'
+              value={nameInfo}
+              onChangeText={text => setNameInfo(text)} />
+          </View>
+          <View style={styles.input}>
+            <TextInput
+              color='white'
+              placeholder='Email'
+              value={emailInfo}
+              keyboardType='email-address'
+              placeholderTextColor='#828282'
+              onChangeText={text => setEmailInfo(text)} />
+          </View>
 
-      <View style={styles.input}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <TextInput
-            color='white'
-            value={passwordInfo}
-            placeholder='Password'
-            secureTextEntry={true}
-            onChangeText={text => setPasswordInfo(text)}
-            placeholderTextColor='#828282' />
-          <Image
-            style={{ marginTop: 5 }}
-            source={require('../../../../assets/images/iceye.png')} />
+          <View style={styles.input}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput
+                color='white'
+                value={passwordInfo}
+                placeholder='Password'
+                secureTextEntry={true}
+                onChangeText={text => setPasswordInfo(text)}
+                placeholderTextColor='#828282' />
+              <Image
+                style={{ marginTop: 5 }}
+                source={require('../../../../assets/images/iceye.png')} />
+            </View>
+          </View>
+          <View style={styles.input}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <TextInput
+                color='white'
+                value={passwordInfo}
+                placeholder='Re-type password'
+                secureTextEntry={true}
+                placeholderTextColor='#828282' />
+              <Image
+                style={{ marginTop: 5 }}
+                source={require('../../../../assets/images/iceye.png')} />
+            </View>
+          </View>
+          <View style={styles.btnSave}>
+            <TouchableOpacity onPress={onPressUpdate}
+              style={{ width: '100%' }}
+            >
+              <Text style={styles.touchLabel}>Save</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      <View style={styles.input}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <TextInput
-            color='white'
-            value={passwordInfo}
-            placeholder='Re-type password'
-            secureTextEntry={true}
-            placeholderTextColor='#828282' />
-          <Image
-            style={{ marginTop: 5 }}
-            source={require('../../../../assets/images/iceye.png')} />
-        </View>
-      </View>
-      <View style={styles.btnSave}>
-        <TouchableOpacity onPress={onPressUpdate}
-          style={{ width: '100%' }}
-        >
-          <Text style={styles.touchLabel}>Save</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   )
 }
 
@@ -147,4 +153,9 @@ const styles = StyleSheet.create({
     marginBottom: 25,
     flexDirection: 'row',
   },
+
+  containerKeyboard: {
+    flex: 1,
+    backgroundColor: '#0c0f14',
+  }
 })

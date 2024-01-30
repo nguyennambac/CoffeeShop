@@ -9,7 +9,7 @@ const Login = (props) => {
   const { nameInfo, setNameInfo } = useContext(AppContext);
   const { emailInfo, setEmailInfo } = useContext(AppContext);
   const { passwordInfo, setPasswordInfo } = useContext(AppContext);
-
+  const { cartHistory, setCartHistory } = useContext(AppContext);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,6 +39,7 @@ const Login = (props) => {
       setNameInfo(result.user.name);
       setEmailInfo(result.user.email);
       setPasswordInfo(password);
+      setCartHistory(result.user.carts);
     } else {
       Alert.alert('Thông báo', 'Đăng nhập không thành công');
     }

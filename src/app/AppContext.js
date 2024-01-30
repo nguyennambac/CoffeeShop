@@ -10,6 +10,7 @@ export const AppContextProvider = (props) => {
     const [nameInfo, setNameInfo] = useState("");
     const [emailInfo, setEmailInfo] = useState("");
     const [passwordInfo, setPasswordInfo] = useState("");
+    const [cartHistory, setCartHistory] = useState("");
 
     return (
         <AppContext.Provider value={{
@@ -18,6 +19,7 @@ export const AppContextProvider = (props) => {
             nameInfo, setNameInfo,
             emailInfo, setEmailInfo,
             passwordInfo, setPasswordInfo,
+            cartHistory, setCartHistory
         }}>
             {children}
         </AppContext.Provider>

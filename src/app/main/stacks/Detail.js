@@ -182,7 +182,7 @@ const CoffeeDetails = (props) => {
             }}>{product.description}</Text>
           </View>
 
-          <View style={{ marginTop: 200, marginBottom: 100, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ marginTop: 100, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <View>
                 <Text style={{

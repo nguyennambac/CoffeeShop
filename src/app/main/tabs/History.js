@@ -1,10 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid } from 'react-native'
+import React, { useContext, useState } from 'react'
+import { AppContext} from '../../AppContext'
 
 const History = () => {
+  const {cartHistory} = useContext(AppContext);
+  console.log(cartHistory);
   return (
     <View>
-      <Text>History</Text>
+      <Text>Cart History</Text>
+      <Text style={{ fontSize: 18, color: 'black' }}>{cartHistory?.created_at}</Text>
     </View>
   )
 }

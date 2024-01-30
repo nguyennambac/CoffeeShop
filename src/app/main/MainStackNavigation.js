@@ -18,6 +18,7 @@ import Payment from './stacks/Payment';
 import Personal from './stacks/Personal';
 import Settings from './stacks/Settings';
 import Login from '../authen/Login';
+import Register from '../authen/Register';
 
 const renderTabLabel = ({ route, focused }) => {
     if (!focused) {
@@ -78,6 +79,7 @@ const MainStackNavigation = () => {
             <MainStacks.Screen name="CoffeeDetails" component={Detail} />
             <MainStacks.Screen name="Payment" component={Payment} />
             <MainStacks.Screen name="Login" component={Login} />
+            <MainStacks.Screen name="Register" component={Register} />
             <MainStacks.Screen name="PersonalDetails" component={Personal} />
             <MainStacks.Screen name="Settings" component={Settings} />
         </MainStacks.Navigator>

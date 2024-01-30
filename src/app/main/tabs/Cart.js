@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, } from 'react-native'
 import React, { useContext } from 'react'
 import { AppContext } from '../../AppContext'
 import { useNavigation } from '@react-navigation/native';
@@ -6,31 +6,33 @@ import { useNavigation } from '@react-navigation/native';
 const Cart = () => {
   const navigation = useNavigation();
   const { cart, setCart } = useContext(AppContext);
-  let totalPrice = 0;
 
-  cart.forEach(item => {
-    totalPrice += item.total_price;
-  });
-
-  const handleQuantityChange = (productId, change) => {
-    // Cập nhật số lượng và tổng giá trong giỏ hàng
-    const updatedCart = cart.map(item => {
-      if (item.product_id === productId) {
-        const newQuantity = Math.max(1, item.product_quantity + change);
-        const newTotalPrice = newQuantity * item.product_price;
-        return {
-          ...item,
-          product_quantity: newQuantity,
-          total_price: newTotalPrice,
-        };
-      }
-      return item;
-    });
-    setCart(updatedCart);
-  };
-
+  const payMent = () => {
+    if (total <= 0) {
+      ToastAndroid.show('Cart non item!', ToastAndroid.SHORT);
+      return;
+    }
+    navigation.navigate('Payment');
+  }
 
   const renderItemCart = ({ item }) => {
+    const { product_id, product_name, product_image, product_quantity, product_price } = item;
+    const handleQuantityChange = (type = 1) => {
+      // type = 1: tăng số lượng
+      // type = -1: giảm số lượng
+      const quantity = product_quantity + type;
+      // cập nhật lại số lượng
+      // tìm vị trí của sản phẩm trong giỏ hàng
+      const index = cart.findIndex(item => item.product_id.toString() == product_id.toString());
+
+      if (quantity <= 0) {
+
+      }
+      // cập nhật lại số lượng
+      cart[index].product_quantity = quantity;
+      // cập nhật lại giỏ hàng
+      setCart([...cart]);
+    }
     return (
       <View style={{ flexDirection: 'row', marginTop: 16, width: '100%', height: 154, backgroundColor: '#262B33', borderRadius: 23, padding: 10 }}>
         <View>
@@ -51,20 +53,20 @@ const Cart = () => {
           }}>
             <Text style={{
               color: '#D17842',
-            }}>$</Text> {item.total_price}
+            }}>$</Text> {item.product_price}
           </Text>
 
           <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
-              onPress={() => handleQuantityChange(item.product_id, -1)}
+              onPress={() => handleQuantityChange(-1)}
               style={{ width: 30, height: 30, backgroundColor: '#D17842', alignItems: 'center', borderRadius: 5 }}>
               <Text style={{ paddingVertical: 3, fontSize: 18, color: 'white' }}>-</Text>
             </TouchableOpacity>
 
-            <Text style={{ width: 50, height: 30, borderColor: '#D17842', borderWidth: 1, borderRadius: 5, textAlign: 'center', marginHorizontal: 25, paddingVertical: 5, color: 'white' }}>{item.product_quantity}</Text>
+            <Text style={{ width: 50, height: 30, borderColor: '#D17842', borderWidth: 1, borderRadius: 5, textAlign: 'center', marginHorizontal: 15, paddingVertical: 5, color: 'white' }}>{item.product_quantity}</Text>
 
             <TouchableOpacity
-              onPress={() => handleQuantityChange(item.product_id, 1)}
+              onPress={() => handleQuantityChange(1)}
               style={{ width: 30, height: 30, backgroundColor: '#D17842', alignItems: 'center', borderRadius: 5 }}>
               <Text style={{ paddingVertical: 3, fontSize: 18, color: 'white' }}>+</Text>
             </TouchableOpacity>
@@ -73,6 +75,12 @@ const Cart = () => {
       </View>
     )
   }
+
+  // tính tổng tiền
+  const total = cart.reduce((total, item) => {
+    return total + item.product_quantity * item.product_price;
+  }, 0);
+
   return (
     <View style={styles.container}>
       <View style={{
@@ -103,7 +111,7 @@ const Cart = () => {
       </View>
 
       <FlatList
-      style={{marginTop: 10}}
+        style={{ marginTop: 10 }}
         showsVerticalScrollIndicator={false}
         horizontal={false}
         data={cart}
@@ -131,12 +139,14 @@ const Cart = () => {
                 color: '#D17842',
               }}>
                 $ </Text>
-              {totalPrice}</Text>
+              {total}</Text>
           </View>
         </View>
 
         <View>
-          <TouchableOpacity style={{ width: 240, height: 60, backgroundColor: '#D17842', borderRadius: 20 }}>
+          <TouchableOpacity
+            onPress={payMent}
+            style={{ width: 200, height: 60, backgroundColor: '#D17842', borderRadius: 20 }}>
             <Text style={{
               paddingVertical: 20,
               textAlign: 'center',
