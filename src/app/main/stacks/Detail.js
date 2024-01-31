@@ -6,10 +6,15 @@ import AxiosInstance from '../../helpers/AxiosInstance';
 
 const CoffeeDetails = (props) => {
   const { cart, setCart } = useContext(AppContext);
+  const { productFavorites, setProductFavorites } = useContext(AppContext);
+  const [isFavorite, setIsFavorite] = useState(false);
+
 
   const { _id } = props?.route?.params;
 
   const navigation = useNavigation();
+
+
 
   const [product, setProduct] = useState({});
   useEffect(() => {
@@ -24,6 +29,49 @@ const CoffeeDetails = (props) => {
     }
     getProduct();
   }, [_id]);
+
+  const addFavorite = () => {
+    const itemFavorite = {
+      product_id: product._id,
+      product_name: product.name,
+      product_image: product.image,
+      product_description: product.description,
+      product_voting: product.voting,
+      prodct_rating: product.rating
+    };
+
+    if (isFavorite) {
+      // Remove the item from favorites
+      const updatedFavorites = productFavorites.filter(
+        (favoriteItem) => favoriteItem.product_id !== itemFavorite.product_id
+      );
+
+      setProductFavorites(updatedFavorites);
+      ToastAndroid.show('Removed from Favorites!', ToastAndroid.SHORT);
+    } else {
+      // Check if the item already exists in favorites
+      const isAlreadyInFavorites = productFavorites.some(
+        (favoriteItem) => favoriteItem.product_id === itemFavorite.product_id
+      );
+
+      if (isAlreadyInFavorites) {
+        // If it exists, remove it
+        const updatedFavorites = productFavorites.filter(
+          (favoriteItem) => favoriteItem.product_id !== itemFavorite.product_id
+        );
+
+        setProductFavorites(updatedFavorites);
+        ToastAndroid.show('Removed from Favorites!', ToastAndroid.SHORT);
+      } else {
+        // If it doesn't exist, add it
+        setProductFavorites([...productFavorites, itemFavorite]);
+        ToastAndroid.show('Added to Favorites!', ToastAndroid.SHORT);
+      }
+    }
+
+    // Toggle the value of isFavorite
+    setIsFavorite(!isFavorite);
+  }
 
   const addToCart = async () => {
     const itemCart = {
@@ -69,7 +117,7 @@ const CoffeeDetails = (props) => {
               />
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={addFavorite}>
               <Image
                 source={require("../../../../assets/images/btnLove.png")}
                 style={{ justifyContent: 'flex-start', marginLeft: 5 }}
@@ -182,7 +230,7 @@ const CoffeeDetails = (props) => {
             }}>{product.description}</Text>
           </View>
 
-          <View style={{ marginTop: 100, flexDirection: 'row', justifyContent: 'space-between' }}>
+          <View style={{ marginTop: 235, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View>
               <View>
                 <Text style={{
