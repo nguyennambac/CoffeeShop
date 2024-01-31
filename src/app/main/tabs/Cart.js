@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, } from 'react-native'
+import { StyleSheet, Text, View, FlatList, TouchableOpacity, Image, ToastAndroid, Alert, } from 'react-native'
 import React, { useContext } from 'react'
 import { AppContext } from '../../AppContext'
 import { useNavigation } from '@react-navigation/native';
@@ -26,10 +26,28 @@ const Cart = () => {
       const index = cart.findIndex(item => item.product_id.toString() == product_id.toString());
 
       if (quantity <= 0) {
-
+        Alert.alert(
+          'Remove product',
+          'Do you want to remove the product?',
+          [
+            {
+              text: 'No',
+              style: 'cancel',
+            },
+            {
+              text: 'Yes',
+              onPress: () => {
+                cart.splice(index, 1);
+                setCart([...cart]);
+              }
+            },
+          ],
+          { cancelable: false }
+        );
+      } else {
+        // cập nhật lại số lượng
+        cart[index].product_quantity = quantity;
       }
-      // cập nhật lại số lượng
-      cart[index].product_quantity = quantity;
       // cập nhật lại giỏ hàng
       setCart([...cart]);
     }

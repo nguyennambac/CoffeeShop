@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Image, Text } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { AppContext } from '../AppContext';
 
 const MainStacks = createNativeStackNavigator();
 const MainTabs = createBottomTabNavigator();
@@ -53,6 +54,14 @@ const renderTabIcon = ({ route, focused }) => {
 };
 
 const MainTabsNavigation = () => {
+    const { cart } = useContext(AppContext);
+    var cartQuantity = 0;
+
+    for (let index = 0; index < cart.length; index++) {
+        cartQuantity += 1;
+    }
+
+    console.log(cartQuantity);
     return (
         <MainTabs.Navigator
             screenOptions={({ route }) => ({
@@ -65,9 +74,9 @@ const MainTabsNavigation = () => {
             })}
         >
             <MainTabs.Screen name="Home" component={Home} />
-            <MainTabs.Screen name="Cart" component={Cart} />
-            <MainTabs.Screen name="History" component={History} />
+            <MainTabs.Screen options={{ tabBarBadge: cartQuantity }} name="Cart" component={Cart} />
             <MainTabs.Screen name="Favorite" component={Favorite} />
+            <MainTabs.Screen name="History" component={History} />
         </MainTabs.Navigator>
     )
 }
